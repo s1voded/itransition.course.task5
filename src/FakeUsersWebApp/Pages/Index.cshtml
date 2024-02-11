@@ -33,7 +33,7 @@
                 @Html.DisplayNameFor(model => model.Users[0].Guid)
             </th>
             <th>
-                Full name
+                @Html.DisplayNameFor(model => model.Users[0].FullName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Users[0].Address)
@@ -54,8 +54,7 @@
                     @Html.DisplayFor(modelItem => modelItem.Users[i].Guid)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.Users[i].FirstName)
-                    @Html.DisplayFor(modelItem => modelItem.Users[i].LastName)
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].FullName)        
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => modelItem.Users[i].Address)

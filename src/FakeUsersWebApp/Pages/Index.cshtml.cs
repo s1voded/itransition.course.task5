@@ -1,3 +1,4 @@
+using Bogus;
 using FakeUsersWebApp.Model;
 using FakeUsersWebApp.Services;
 using Microsoft.AspNetCore.Identity;
@@ -10,20 +11,21 @@ namespace FakeUsersWebApp.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IUsersService _usersService;
+        private readonly IFakeUsersService _usersService;
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public InputModel Input { get; set; }
 
         public IEnumerable<SelectListItem> Locales { get; set; } = new List<SelectListItem> 
         { 
             new SelectListItem { Value = "ru", Text = "Russia" },
-            new SelectListItem { Value = "en", Text = "USA" },
+            new SelectListItem { Value = "en", Text = "United States" },
+            new SelectListItem { Value = "de", Text = "Germany" },
         };
 
         public IList<User> Users { get; set; } = default!;
 
-        public IndexModel(ILogger<IndexModel> logger, IUsersService usersService)
+        public IndexModel(ILogger<IndexModel> logger, IFakeUsersService usersService)
         {
             _logger = logger;
             _usersService = usersService;
@@ -31,7 +33,7 @@ namespace FakeUsersWebApp.Pages
 
         public void OnGet()
         {
-            Users = _usersService.GetUsers().ToList();
+            Users = _usersService.GetUsers(20, "ru", 10.5f, 100500).ToList();
         }
     }
 
