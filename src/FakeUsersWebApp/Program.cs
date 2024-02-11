@@ -1,4 +1,8 @@
+using FakeUsersWebApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IUsersService, FakeUserGeneratorService>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

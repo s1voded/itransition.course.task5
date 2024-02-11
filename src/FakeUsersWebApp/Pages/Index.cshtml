@@ -4,7 +4,67 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            Region:
+            <select asp-for="Input.Locale" asp-items="Model.Locales" class="form-select"></select>
+        </div>
+        <div class="col-sm">
+            One of three columns
+        </div>
+        <div class="col-sm">
+            One of three columns
+        </div>
+        <div class="col-sm">
+            One of three columns
+        </div>
+    </div>
 </div>
+
+<table class="table">
+    <caption>List of users</caption>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Guid)
+            </th>
+            <th>
+                Full name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Phone)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.Users.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].Guid)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].FirstName)
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].Phone)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
