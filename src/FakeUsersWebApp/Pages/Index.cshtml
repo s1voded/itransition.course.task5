@@ -4,23 +4,26 @@
     ViewData["Title"] = "Home page";
 }
 
+
+<form>
 <div class="container">
     <div class="row">
-        <div class="col-sm">
-            Region:
-            <select asp-for="Input.Locale" asp-items="Model.Locales" class="form-select"></select>
+        <div class="col">
+                <select asp-for="Locale" asp-items="Model.Locales" class="form-select" onchange="this.form.submit()"></select>
         </div>
-        <div class="col-sm">
-            One of three columns
+        <div class="col">
+                @Html.TextBoxFor(m => m.CountErrors, new { type = "range", min = "0", step = "0.25", max = "10" })
         </div>
-        <div class="col-sm">
-            One of three columns
+        <div class="col">
+                @Html.TextBoxFor(m => m.CountErrors, new { type = "number", min = "0", step = "0.1", max = "1000"})
+                @Html.HiddenFor(m => m.CountErrors, new {onchange="this.form.submit()"})
         </div>
-        <div class="col-sm">
-            One of three columns
+        <div class="col">
+                @Html.TextBoxFor(m => m.Seed, new { type = "number", min = "0", onchange = "this.form.submit()" })
         </div>
     </div>
 </div>
+</form>
 
 <table class="table">
     <caption>List of users</caption>
@@ -33,7 +36,7 @@
                 @Html.DisplayNameFor(model => model.Users[0].Guid)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Users[0].FullName)
+                Fullname
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Users[0].Address)
@@ -54,7 +57,9 @@
                     @Html.DisplayFor(modelItem => modelItem.Users[i].Guid)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.Users[i].FullName)        
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].LastName)
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].FirstName)
+                    @Html.DisplayFor(modelItem => modelItem.Users[i].MiddleName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => modelItem.Users[i].Address)

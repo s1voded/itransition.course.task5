@@ -23,25 +23,33 @@ namespace FakeUsersWebApp.Services
 
         public IEnumerable<User> GetUsers(int countUsers, string locale, float countErrorsPerRecord, int seed)
         {
-            LoadMiddlesNamesFromFile(locale);
+            LoadMiddleNamesFromFile(locale);
+            var userFaker = InitUserFaker(locale, countErrorsPerRecord);
+            return Enumerable.Range(seed, countUsers).Select(s => MakeUser(s, userFaker));
+        }
 
+        private Faker<User> InitUserFaker(string locale, float countErrorsPerRecord)
+        {
             var userIds = 1;
             var userFaker = new Faker<User>(locale)
                 .RuleFor(u => u.Id, f => userIds++)
                 .RuleFor(u => u.Guid, f => f.Random.Guid())
                 .RuleFor(u => u.FirstName, f => f.Person.FirstName)
                 .RuleFor(u => u.LastName, f => f.Person.LastName)
+                .RuleFor(u => u.MiddleName, GetRandomMiddleName)
+                .RuleFor(u => u.Address, GetRandomAddress)
                 .RuleFor(u => u.Phone, f => f.Phone.PhoneNumber(GetRandomPhoneFormat(locale, f.Random)))
-                .FinishWith((f, u) => 
+                .FinishWith((f, u) =>
                 {
-                    u.MiddleName = GetRandomMiddleName(f);
-                    u.Address = GetRandomAddress(f);
-                    u.FullName = string.Join(" ", u.LastName, u.FirstName, u.MiddleName);
-                    var func = f.Random.ListItem(_errorService.ListErrorFunc);
+                    //var func = f.Random.ListItem(_errorService.ListErrorFunc);
+                    _errorService.CreateErrors(u, countErrorsPerRecord, f);
                 });
+            return userFaker;
+        }
 
-            User MakeUser(int seed) => userFaker.UseSeed(seed).Generate();
-            return Enumerable.Range(seed, countUsers).Select(MakeUser);
+        private User MakeUser(int seed, Faker<User> userFaker)
+        {
+            return userFaker.UseSeed(seed).Generate();
         }
 
         private string GetRandomPhoneFormat(string locale, Randomizer randomizer)
@@ -64,7 +72,7 @@ namespace FakeUsersWebApp.Services
             else return middleName;
         }
 
-        private void LoadMiddlesNamesFromFile(string locale)
+        private void LoadMiddleNamesFromFile(string locale)
         {
             dictionaryMiddleNames.Clear();
             foreach (Gender gender in Enum.GetValues(typeof(Gender)))
