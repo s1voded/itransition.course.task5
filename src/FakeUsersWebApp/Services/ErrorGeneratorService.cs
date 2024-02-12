@@ -57,6 +57,7 @@ namespace FakeUsersWebApp.Services
         private bool CreateErrorInProperty<T>(T objectForErrors, StringBuilder valueBuffer, Faker faker)
         {
             var randomProperty = faker.Random.ArrayElement(GetAllStringProperties(objectForErrors).ToArray());
+
             valueBuffer.Append(randomProperty.GetValue(objectForErrors));
             var errorFunction = faker.Random.ListItem(_listErrorFunctions);
             var createErrorResult = errorFunction(valueBuffer, faker);
@@ -68,7 +69,7 @@ namespace FakeUsersWebApp.Services
 
         private IEnumerable<PropertyInfo> GetAllStringProperties<T>(T objecctForErrors)
         {
-            return objecctForErrors.GetType().GetProperties().Where(prop => prop.PropertyType == typeof(string));
+            return objecctForErrors.GetType().GetProperties().Where(prop => prop.PropertyType == typeof(string)).Where(prop => prop.GetValue(objecctForErrors)?.ToString()?.Length > 0);
         }
 
         private int GetTotalCountErrors(float countErrors, Randomizer randomizer)

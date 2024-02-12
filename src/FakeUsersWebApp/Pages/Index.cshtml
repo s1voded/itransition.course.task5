@@ -4,28 +4,28 @@
     ViewData["Title"] = "Home page";
 }
 
-<form>
+<form id="faker-settings-form">
 <div class="container">
     <div class="row">
             <div class="col">
                 @Html.LabelFor(m => m.Locale, "Region:")
-                @Html.DropDownListFor(m => m.Locale, Model.Locales, new { @class = "form-select", onchange = "this.form.submit()" })
+                @Html.DropDownListFor(m => m.Locale, Model.Locales, new { @class = "form-select", onchange="this.form.submit()"})
         </div>   
             <div class="col">
                 @Html.LabelFor(m => m.CountErrors, "Errors:")
-                @Html.TextBoxFor(m => m.CountErrors, new { @class="form-control", type = "number", min = "0", onchange = "this.form.submit()" })
-                <input type="range" id="errors_slider" min="0" max="10" step="0.25" value=@Model.CountErrors class="form-range">
+                @Html.TextBoxFor(m => m.CountErrors, new { @class = "form-control", type="number", min = 0, max = 1000, onchange = "this.form.submit()" })
+                <input type=range id=errors_slider min=0 max=10 step=0.25 value=@Model.CountErrors class="form-range" oninput="initErrorsTextBox()" onchange="this.form.submit()">
             </div>
         <div class="col">
                 @Html.LabelFor(m => m.Seed, "Seed:")
-                @Html.TextBoxFor(m => m.Seed, new { @class = "form-control", type = "number", min = "0", onchange = "this.form.submit()" })
-                <button id="seed_random" class="btn btn-outline-dark">
+                @Html.TextBoxFor(m => m.Seed, new { @class = "form-control", type = "number", min=0, onchange = "this.form.submit()" })
+                <button type="button" id="seed_random" class="btn btn-outline-dark" onclick="generateRandomSeed()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5" />
                         <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
                     </svg>
                 </button>
-        </div>
+            </div>
     </div>
 </div>
 </form>
@@ -39,19 +39,39 @@
         const $seedRandomButton = $('#seed_random');
 
         $errorsSlider.on('input', function () {
-            $errorsTextBox.val(this.value);
-            $errorsTextBox.trigger('onchange');
+            //$errorsTextBox.val(this.value);
+            //formSubmit();
         });
 
         $errorsTextBox.on('input', function () {
-            $errorsSlider.val(this.value);
+            //$errorsSlider.val(this.value);
+            //formSubmit();
         });
 
-        $seedRandomButton.on('click', function () {
+        /*$seedRandomButton.on('click', function () {
             const randomValue = Math.floor(Math.random() * 100500);
-            $seedTextBox.val(randomValue);
-            $seedTextBox.trigger('onchange');
-        });
+            generateRandomSeed();
+            formSubmit();
+        });*/
+
+        function generateRandomSeed(){
+            document.getElementById("Seed").value = getRandomInt(100500);
+            formSubmit();
+        }
+
+        function initErrorsTextBox() {
+            document.getElementById("CountErrors").value = document.getElementById("errors_slider").value;
+            //formSubmit();
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        function formSubmit() {
+            document.getElementById("faker-settings-form").submit();
+        }
+
     </script>
 }
 
