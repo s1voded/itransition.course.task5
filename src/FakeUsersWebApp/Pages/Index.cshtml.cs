@@ -38,9 +38,10 @@ namespace FakeUsersWebApp.Pages
             _fakeUsersService = fakeUsersService;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
             Users = _fakeUsersService.GetUsers(20, Locale, CountErrors, Seed).ToList();
+            return Page();
         }
     }
 }
