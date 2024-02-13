@@ -63,7 +63,6 @@
 {
     <script>
         this.userIds = 1;
-        this.page = 1;
 
         function generateRandomSeed() {
             document.getElementById("Seed").value = Math.floor(Math.random() * 100500);
@@ -80,7 +79,6 @@
 
         function loadAfterChange() {
             userIds = 1;
-            page = 1;
             loadPartialTable(false, 20);
         }
 
@@ -96,8 +94,7 @@
                 + "&CountErrors=" + countErrors 
                 + "&Seed=" + seed 
                 + "&UserIds=" + userIds 
-                + "&CountUsers=" + countUsers
-                + "&PageNum=" + page,
+                + "&CountUsers=" + countUsers,
                 dataType: "html"
             }).done(function (result) {
                 if (result) {
@@ -119,7 +116,6 @@
                     top: $(window).scrollTop()-10,
                     behavior: 'smooth'
                 })
-                page = page + 1;
                 loadPartialTable(true, 10);
             }
         });

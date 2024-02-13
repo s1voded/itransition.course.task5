@@ -30,8 +30,6 @@ namespace FakeUsersWebApp.Pages
         [BindProperty(SupportsGet = true)]
         public int CountUsers { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public int PageNum { get; set; }
 
         public IEnumerable<SelectListItem> Locales { get; set; } = new List<SelectListItem> 
         { 
@@ -55,7 +53,7 @@ namespace FakeUsersWebApp.Pages
 
         public IActionResult OnGetPartialTable()
         {
-            Users = _fakeUsersService.GetUsers(CountUsers, UserIds, Locale, CountErrors, Seed + PageNum).ToList();
+            Users = _fakeUsersService.GetUsers(CountUsers, UserIds, Locale, CountErrors, Seed + UserIds).ToList();
             return Partial("_PartialTable", Users);
         }
     }
