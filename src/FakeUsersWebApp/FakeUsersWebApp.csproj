@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\data\ru_Female_middlename.txt" />
+    <None Include="wwwroot\data\ru_Male_middlename.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="35.4.0" />
   </ItemGroup>
 

@@ -6,6 +6,7 @@ namespace FakeUsersWebApp.Services
 {
     public class FakeUserGeneratorService : IFakeUsersService
     {
+        private readonly IWebHostEnvironment _env;
         private readonly IErrorService _errorService;
 
         private readonly Dictionary<Gender, string[]> dictionaryMiddleNames = [];
@@ -16,9 +17,10 @@ namespace FakeUsersWebApp.Services
             { "de", ["+49 ### ### ####", "0049 (###) #######"]}
         };
 
-        public FakeUserGeneratorService(IErrorService errorService)
+        public FakeUserGeneratorService(IErrorService errorService, IWebHostEnvironment env)
         {
             _errorService = errorService;
+            _env = env;
         }
 
         public IEnumerable<User> GetUsers(int countUsers, int userIds, string locale, float countErrorsPerRecord, int seed)
@@ -77,7 +79,7 @@ namespace FakeUsersWebApp.Services
             dictionaryMiddleNames.Clear();
             foreach (Gender gender in Enum.GetValues(typeof(Gender)))
             {
-                var path = Path.Combine($"Data/{locale}_{gender}_middlename.txt");
+                var path = Path.Combine(_env.WebRootPath, "data", $"{locale}_{gender}_middlename.txt");
                 if (File.Exists(path))
                 {
                     dictionaryMiddleNames.Add(gender, File.ReadAllLines(path));
