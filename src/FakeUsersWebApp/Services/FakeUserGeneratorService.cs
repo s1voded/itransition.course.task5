@@ -32,7 +32,6 @@ namespace FakeUsersWebApp.Services
 
         private Faker<User> InitUserFaker(int userIds, string locale, float countErrorsPerRecord)
         {
-            //var userIds = 1;
             var userFaker = new Faker<User>(locale)
                 .RuleFor(u => u.Id, f => userIds++)
                 .RuleFor(u => u.Guid, f => f.Random.Guid())
@@ -43,7 +42,6 @@ namespace FakeUsersWebApp.Services
                 .RuleFor(u => u.Phone, f => f.Phone.PhoneNumber(GetRandomPhoneFormat(locale, f.Random)))
                 .FinishWith((f, u) =>
                 {
-                    //var func = f.Random.ListItem(_errorService.ListErrorFunc);
                     _errorService.CreateErrors(u, countErrorsPerRecord, f);
                 });
             return userFaker;
