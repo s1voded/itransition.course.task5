@@ -16,13 +16,22 @@ namespace FakeUsersWebApp.Pages
         private readonly IFakeUsersService _fakeUsersService;
 
         [BindProperty(SupportsGet = true)]
-        public string Locale { get; set; } = "ru";
+        public string Locale { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public float CountErrors { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int Seed { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int UserIds { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int CountUsers { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int PageNum { get; set; }
 
         public IEnumerable<SelectListItem> Locales { get; set; } = new List<SelectListItem> 
         { 
@@ -44,9 +53,9 @@ namespace FakeUsersWebApp.Pages
             return Page();
         }
 
-        public IActionResult OnGetPartialTable(string Locale, float CountErrors, int Seed)
+        public IActionResult OnGetPartialTable()
         {
-            Users = _fakeUsersService.GetUsers(20, Locale, CountErrors, Seed).ToList();
+            Users = _fakeUsersService.GetUsers(CountUsers, UserIds, Locale, CountErrors, Seed + PageNum).ToList();
             return Partial("_PartialTable", Users);
         }
     }

@@ -9,16 +9,16 @@
     <div class="row">
             <div class="col">
                 @Html.LabelFor(m => m.Locale, "Region:")
-                @Html.DropDownListFor(m => m.Locale, Model.Locales, new { @class = "form-select", onchange="loadPartialTable(false)"})
+                @Html.DropDownListFor(m => m.Locale, Model.Locales, new { @class = "form-select", onchange="loadAfterChange()"})
         </div>   
             <div class="col">
                 @Html.LabelFor(m => m.CountErrors, "Errors:")
-                @Html.TextBoxFor(m => m.CountErrors, new { @class = "form-control", type = "number", min = 0, max = 1000, onchange = "loadPartialTable(false)" })
-                <input type=range id=errors_slider min=0 max=10 step=0.25 value=@Model.CountErrors class="form-range" oninput="initErrorsTextBox()" onchange="loadPartialTable(false)">
+                @Html.TextBoxFor(m => m.CountErrors, new { @class = "form-control", type = "number", min = 0, max = 1000, oninput = "initErrorsSlider()", onchange = "loadAfterChange()" })
+                <input type=range id=errors_slider min=0 max=10 step=0.25 value=@Model.CountErrors class="form-range" oninput="initErrorsTextBox()" onchange="loadAfterChange()">
             </div>
         <div class="col">
                 @Html.LabelFor(m => m.Seed, "Seed:")
-                @Html.TextBoxFor(m => m.Seed, new { @class = "form-control", type = "number", min = 0, onchange = "loadPartialTable(false)" })
+                @Html.TextBoxFor(m => m.Seed, new { @class = "form-control", type = "number", min = 0, onchange = "loadAfterChange()" })
                 <button type="button" id="seed_random" class="btn btn-outline-dark" onclick="generateRandomSeed()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5" />
@@ -29,46 +29,6 @@
     </div>
 </div>
 </form>
-
-@section Scripts
-{
-    <script>
-        function generateRandomSeed(){
-            document.getElementById("Seed").value = Math.floor(Math.random() * 100500);
-            loadPartialTable(false);
-        }
-
-        function initErrorsTextBox() {
-            document.getElementById("CountErrors").value = document.getElementById("errors_slider").value;
-        }
-
-        function loadPartialTable(dataAppend) {
-            var locale = document.getElementById("Locale").value;
-            var countErrors = document.getElementById("CountErrors").value
-            var seed = document.getElementById("Seed").value;
-
-            $.ajax({
-                type: 'GET',
-                url: '/Index?handler=PartialTable' + "&Locale=" + locale + "&CountErrors=" + countErrors + "&Seed=" + seed,
-                dataType: "html"
-            })
-                .done(function (result) {
-                    if (result) {
-                        if (dataAppend) {
-                            $('#fake-users-table tbody').append(result);
-                            
-                        }
-                        else {
-                            $('#fake-users-table tbody').empty();
-                            $('#fake-users-table tbody').html(result);
-                        }
-                    }
-                });
-        }
-
-        loadPartialTable(true);
-    </script>
-}
 
 <table class="table" id="fake-users-table">
     <caption>List of users</caption>
@@ -94,3 +54,70 @@
     <tbody>
     </tbody>
 </table>
+
+@section Scripts
+{
+    <script>
+        this.userIds = 1;
+        this.page = 1;
+
+        function generateRandomSeed() {
+            document.getElementById("Seed").value = Math.floor(Math.random() * 100500);
+            loadAfterChange();
+        }
+
+        function initErrorsTextBox() {
+            document.getElementById("CountErrors").value = document.getElementById("errors_slider").value;
+        }
+
+        function initErrorsSlider() {
+            document.getElementById("errors_slider").value = document.getElementById("CountErrors").value;
+        }
+
+        function loadAfterChange() {
+            userIds = 1;
+            page = 1;
+            loadPartialTable(false, 20);
+        }
+
+        function loadPartialTable(dataAppend, countUsers) {
+            var locale = document.getElementById("Locale").value;
+            var countErrors = document.getElementById("CountErrors").value
+            var seed = document.getElementById("Seed").value;
+
+            $.ajax({
+                type: 'GET',
+                url: '/Index?handler=PartialTable' 
+                + "&Locale=" + locale 
+                + "&CountErrors=" + countErrors 
+                + "&Seed=" + seed 
+                + "&UserIds=" + userIds 
+                + "&CountUsers=" + countUsers
+                + "&PageNum=" + page,
+                dataType: "html"
+            }).done(function (result) {
+                if (result) {
+                    if (dataAppend) {
+                        $('#fake-users-table tbody').append(result);
+                        userIds = userIds + countUsers;
+                    }
+                    else {
+                        $('#fake-users-table tbody').empty();
+                        $('#fake-users-table tbody').html(result);
+                    }
+                    
+                }
+            });
+        }
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                page = page + 1;
+                loadPartialTable(true, 10);
+            }
+        });
+
+        generateRandomSeed();
+
+    </script>
+}

@@ -21,16 +21,16 @@ namespace FakeUsersWebApp.Services
             _errorService = errorService;
         }
 
-        public IEnumerable<User> GetUsers(int countUsers, string locale, float countErrorsPerRecord, int seed)
+        public IEnumerable<User> GetUsers(int countUsers, int userIds, string locale, float countErrorsPerRecord, int seed)
         {
             LoadMiddleNamesFromFile(locale);
-            var userFaker = InitUserFaker(locale, countErrorsPerRecord);
+            var userFaker = InitUserFaker(userIds, locale, countErrorsPerRecord);
             return Enumerable.Range(seed, countUsers).Select(s => MakeUser(s, userFaker));
         }
 
-        private Faker<User> InitUserFaker(string locale, float countErrorsPerRecord)
+        private Faker<User> InitUserFaker(int userIds, string locale, float countErrorsPerRecord)
         {
-            var userIds = 1;
+            //var userIds = 1;
             var userFaker = new Faker<User>(locale)
                 .RuleFor(u => u.Id, f => userIds++)
                 .RuleFor(u => u.Guid, f => f.Random.Guid())
@@ -95,6 +95,6 @@ namespace FakeUsersWebApp.Services
 
     public interface IFakeUsersService
     {
-        IEnumerable<User> GetUsers(int countUsers, string locale, float countErrorsPerRecord, int seed);
+        IEnumerable<User> GetUsers(int countUsers, int userIds, string locale, float countErrorsPerRecord, int seed);
     }
 }
