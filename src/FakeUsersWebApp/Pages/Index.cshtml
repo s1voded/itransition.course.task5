@@ -115,6 +115,10 @@
 
         $(window).scroll(function () {
             if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                window.scrollTo({
+                    top: $(window).scrollTop()-10,
+                    behavior: 'smooth'
+                })
                 page = page + 1;
                 loadPartialTable(true, 10);
             }
