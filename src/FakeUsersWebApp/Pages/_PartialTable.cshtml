@@ -1,0 +1,25 @@
+﻿@using FakeUsersWebApp.Model
+@model IEnumerable<User>
+
+@foreach (var user in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(model => user.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(model => user.Guid)
+        </td>
+        <td>
+            @Html.DisplayFor(model => user.LastName)
+            @Html.DisplayFor(model => user.FirstName)
+            @Html.DisplayFor(model => user.MiddleName)
+        </td>
+        <td>
+            @Html.DisplayFor(model => user.Address)
+        </td>
+        <td>
+            @Html.DisplayFor(model => user.Phone)
+        </td>
+    </tr>
+}

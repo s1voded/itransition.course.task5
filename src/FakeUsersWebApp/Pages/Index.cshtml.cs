@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace FakeUsersWebApp.Pages
 {
@@ -40,8 +41,13 @@ namespace FakeUsersWebApp.Pages
 
         public IActionResult OnGet()
         {
-            Users = _fakeUsersService.GetUsers(20, Locale, CountErrors, Seed).ToList();
             return Page();
+        }
+
+        public IActionResult OnGetPartialTable(string Locale, float CountErrors, int Seed)
+        {
+            Users = _fakeUsersService.GetUsers(20, Locale, CountErrors, Seed).ToList();
+            return Partial("_PartialTable", Users);
         }
     }
 }
